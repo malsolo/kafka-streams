@@ -86,12 +86,12 @@ public class WordCountDemo {
     public static final String OUTPUT_TOPIC = "streams-wordcount-output";
 
     public static void main(String[] args) {
-        WordCountDemo demo = new WordCountDemo();
+        var demo = new WordCountDemo();
 
-        Properties props = demo.createStreamsConfiguration();
-        Topology topology = demo.createTopology();
+        var props = demo.createStreamsConfiguration();
+        var topology = demo.createTopology();
 
-        KafkaStreams kafkaStreams = new KafkaStreams(topology, props);
+        var kafkaStreams = new KafkaStreams(topology, props);
 
         kafkaStreams.start();
 
