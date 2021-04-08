@@ -1,13 +1,15 @@
 package com.malsolo.kafka.purchase.model;
 
 import com.malsolo.kafka.purchase.model.avro.Purchase;
+import com.malsolo.kafka.purchase.model.avro.PurchasePattern;
+import com.malsolo.kafka.purchase.model.avro.RewardAccumulator;
 import java.util.Objects;
 
 public class ModelHelper {
 
     private static final String CC_NUMBER_REPLACEMENT="xxxx-xxxx-xxxx-";
 
-    public static Purchase maskCreditCard(Purchase purchase) {
+    public static Purchase purchaseMaskCreditCard(Purchase purchase) {
         Objects.requireNonNull(purchase.getCreditCardNumber(), "Credit Card can't be null");
 
         String[] parts = purchase.getCreditCardNumber().split("-");
@@ -20,5 +22,29 @@ public class ModelHelper {
 
         return purchase;
     }
+
+    public static PurchasePattern purchasePatternfromPurchase(Purchase purchase) {
+        return PurchasePattern.newBuilder()
+            .setZipCode(purchase.getZipCode())
+            .setItem(purchase.getItemPurchased())
+            .setDate(purchase.getPurchaseDate())
+            .setAmount(purchase.getPrice() * purchase.getQuantity())
+            .build();
+    }
+
+    public static RewardAccumulator rewardAccumulatorFromPurchase(Purchase purchase) {
+        double purchaseTotal = purchase.getPrice() * (double) purchase.getQuantity();
+        return RewardAccumulator.newBuilder()
+            .setCustomerId(purchase.getLastName()+","+purchase.getFirstName())
+            .setPurchaseTotal(purchaseTotal)
+            .setCurrentRewardPoints((int) purchaseTotal)
+            .build();
+    }
+
+    public void rewardAccumulatorAddRewardPoints(RewardAccumulator rewardAccumulator, int previousTotalPoints) {
+        rewardAccumulator.setTotalRewardPoints(rewardAccumulator.getTotalRewardPoints() + previousTotalPoints);
+    }
+
+
 
 }
