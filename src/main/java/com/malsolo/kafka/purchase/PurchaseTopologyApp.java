@@ -6,6 +6,7 @@ import static com.malsolo.kafka.purchase.config.TopicsConfig.PURCHASE_APPLICATIO
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 
@@ -49,7 +50,13 @@ public class PurchaseTopologyApp {
     }
 
     public Topology createTopology() {
-        return null;
+        var builder = new StreamsBuilder();
+
+
+
+
+
+        return builder.build();
     }
 
 }
