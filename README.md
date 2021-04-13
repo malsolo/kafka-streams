@@ -50,3 +50,10 @@ $ docker exec -it broker kafka-topics --list --bootstrap-server localhost:9092 |
 
 Run **PurchaseTopologyApp**
 
+## Produce and consume messages
+
+### Consume messages
+
+```
+$ docker exec -it broker kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic kafka-streams-demo-transactions --property schema.registry.url=http://localhost:8081 --from-beginning | jq .
+```
