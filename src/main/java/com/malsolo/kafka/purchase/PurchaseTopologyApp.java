@@ -53,8 +53,6 @@ public class PurchaseTopologyApp {
 
         var streams = new KafkaStreams(topology, props);
 
-        streams.start();
-
         System.out.println(topology.describe());
 
         var latch = new CountDownLatch(1);
