@@ -56,4 +56,10 @@ Run **PurchaseTopologyApp**
 
 ```
 $ docker exec -it broker kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic kafka-streams-demo-transactions --property schema.registry.url=http://localhost:8081 --from-beginning | jq .
+
+$ docker exec -it broker kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic kafka-streams-demo-purchases --property schema.registry.url=http://localhost:8081 --from-beginning | jq .
+
+$ docker exec -it broker kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic kafka-streams-demo-patterns --property schema.registry.url=http://localhost:8081 --from-beginning | jq .
+
+$ docker exec -it broker kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic kafka-streams-demo-rewards --property schema.registry.url=http://localhost:8081 --from-beginning | jq .
 ```
