@@ -1,12 +1,12 @@
 package com.malsolo.kafka.purchase;
 
+import static com.malsolo.kafka.purchase.config.TopicsConfig.APPLICATION_ID;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.BOOTSTRAP_SERVERS;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.CORRELATED_PURCHASES_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.CUSTOMER_TRANSACTIONS_TOPIC;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.EMPLOYEE_ID;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.PATTERNS_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.PURCHASES_TOPIC_SINK;
-import static com.malsolo.kafka.purchase.config.TopicsConfig.PURCHASE_APPLICATION_ID;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.REWARDS_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.SCHEMA_REGISTRY_URL;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.TRANSACTIONS_TOPIC_SOURCE;
@@ -74,7 +74,7 @@ public class PurchaseTopologyApp {
     public Properties createStreamsConfiguration() {
         var props = new Properties();
 
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, PURCHASE_APPLICATION_ID);
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, APPLICATION_ID);
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
