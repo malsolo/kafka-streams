@@ -40,6 +40,9 @@ public class ModelHelper {
             .setCustomerId(purchase.getLastName()+","+purchase.getFirstName())
             .setPurchaseTotal(purchaseTotal)
             .setCurrentRewardPoints((int) purchaseTotal)
+            //Default values
+            .setTotalRewardPoints(0)
+            .setDaysFromLastPurchase(0)
             .build();
     }
 

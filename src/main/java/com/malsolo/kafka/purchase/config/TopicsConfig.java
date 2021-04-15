@@ -7,6 +7,7 @@ public class TopicsConfig {
 
     public static final String TRANSACTIONS_TOPIC_SOURCE = "kafka-streams-demo-transactions";
     public static final String PURCHASES_TOPIC_SINK = "kafka-streams-demo-purchases";
+    public static final String PURCHASES_KEYED_TOPIC_SINK = "kafka-streams-demo-purchases-keyed";
     public static final String PATTERNS_TOPIC_SINK = "kafka-streams-demo-patterns";
     public static final String CUSTOMER_TRANSACTIONS_TOPIC = "kafka-streams-demo-customer-transactions";
     public static final String REWARDS_TOPIC_SINK = "kafka-streams-demo-rewards";

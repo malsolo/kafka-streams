@@ -3,9 +3,9 @@ package com.malsolo.kafka.purchase;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.APPLICATION_ID;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.BOOTSTRAP_SERVERS;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.CORRELATED_PURCHASES_TOPIC_SINK;
-import static com.malsolo.kafka.purchase.config.TopicsConfig.CUSTOMER_TRANSACTIONS_TOPIC;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.EMPLOYEE_ID;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.PATTERNS_TOPIC_SINK;
+import static com.malsolo.kafka.purchase.config.TopicsConfig.PURCHASES_KEYED_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.PURCHASES_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.REWARDS_TOPIC_SINK;
 import static com.malsolo.kafka.purchase.config.TopicsConfig.SCHEMA_REGISTRY_URL;
@@ -18,7 +18,6 @@ import com.malsolo.kafka.purchase.model.avro.CorrelatedPurchase;
 import com.malsolo.kafka.purchase.model.avro.Purchase;
 import com.malsolo.kafka.purchase.model.avro.PurchasePattern;
 import com.malsolo.kafka.purchase.model.avro.RewardAccumulator;
-import com.malsolo.kafka.purchase.partitioner.RewardsStreamPartitioner;
 import com.malsolo.kafka.purchase.repository.PurchaseRepositorySysOut;
 import com.malsolo.kafka.purchase.transformer.PurchaseRewardTransformer;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
@@ -40,7 +39,6 @@ import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Predicate;
 import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.Repartitioned;
 import org.apache.kafka.streams.state.Stores;
 
 public class PurchaseTopologyApp {
@@ -123,12 +121,24 @@ public class PurchaseTopologyApp {
 
         //3rd PROCESSOR: REWARDS
         //State store for calculating the rewards.
-        var rewardsStreamPartitioner = new RewardsStreamPartitioner();
+        //var rewardsStreamPartitioner = new RewardsStreamPartitioner();
 
+        var maskedPurchaseKeyedKStream = maskedPurchaseKStream
+            .selectKey((key, purchase) -> purchase.getCustomerId())
+            .peek((key, purchase) -> System.out
+                .printf("Purchases to rewards, key selected %s for %s \n", key, purchase));
+
+        maskedPurchaseKeyedKStream.print(Printed.<String, Purchase>toSysOut().withLabel("purchases-keyed"));
+
+        maskedPurchaseKeyedKStream.to(PURCHASES_KEYED_TOPIC_SINK);
+
+        /*
         var transByCustomerStream = maskedPurchaseKStream
             .repartition(Repartitioned.streamPartitioner(rewardsStreamPartitioner)
             .withName(CUSTOMER_TRANSACTIONS_TOPIC)
         );
+         */
+        KStream<String, Purchase> transByCustomerStream = builder.stream(PURCHASES_KEYED_TOPIC_SINK);
 
         //Adding a state store
         var rewardsStateStoreName = "rewardsPointsStore";
